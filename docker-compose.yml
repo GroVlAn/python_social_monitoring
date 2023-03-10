@@ -1,0 +1,19 @@
+version: '3'
+
+services:
+  db:
+    image: postgres:13
+    environment:
+      POSTGRES_DB: dbname
+      POSTGRES_USER: dbuser
+      POSTGRES_PASSWORD: dbpassword
+    ports:
+      - "5433:5432"
+
+  web:
+    build: .
+    command: sh -c "wait-for-it db:5433 -- python manage.py runserver 0.0.0.0:8000"
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
